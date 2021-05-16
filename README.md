@@ -1,4 +1,4 @@
-# RefractiveIndex
+# Refractive Index
 
 Usage: [N [,w]] = refractiveIndex(wavelength, substance, waveunit)
 
