@@ -24,8 +24,6 @@ Warren, S.G. (1984). Optical constants of ice from the ultraviolet to the microw
 
 Warren, S. G., & Brandt, R. E. (2008). Optical constants of ice from the ultraviolet to the microwave: A revised compilation. Journal of Geophysical Research: Atmospheres, 113, D14220. https://doi.org/10.1029/2007JD009744
 
-Bond, T.C., & Bergstrom, R.W. (2006). Light absorption by carbonaceous particles: An investigative review. Aerosol Science and Technology, 40, 27-67. https://doi.org/10.1080/02786820500421521
-
 WATER
 
 Hale, G.M., & Querry, M.R. (1973). Optical constants of water in the 200-nm to 200-µm wavelength region. Applied Optics, 12, 555-563. https://doi.org/10.1364/AO.12.000555
