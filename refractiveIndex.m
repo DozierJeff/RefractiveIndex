@@ -260,7 +260,8 @@ if ~isequal(size(N),waveSize)
 end
 
 if nargout>1
-    varargout{1} = convertLengthUnits(exp(logWave),tableUnit,p.Results.waveunit);
+    wave = convertLengthUnits(exp(logWave),tableUnit,p.Results.waveunit);
+    varargout{1} = reshape(wave,size(N));
 end
 end
 
@@ -320,6 +321,8 @@ SanJuanDust = categorical({'SanJuanDust'});
 
 % generic 'ice' as substance uses 'iceP'
 if strcmpi(substance,'ice')
+    material = iceP;
+elseif strcmpi(substance,'icep')
     material = iceP;
 elseif strcmpi(substance,'water')
     material = water;
