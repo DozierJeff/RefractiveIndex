@@ -1,5 +1,5 @@
-function [ N, varargout] = refractiveIndex(wavelength,substance,waveunit  )
-% [ N [,wavelengths]] = refractiveIndex( wavelength, substance, waveunit  )
+function [ N, substance, varargout] = refractiveIndex(wavelength,substance,waveunit  )
+% [N, substance, [,wavelengths]] = refractiveIndex( wavelength, substance, waveunit  )
 % complex refractive index of specified substance
 %
 % INPUT
@@ -20,10 +20,13 @@ function [ N, varargout] = refractiveIndex(wavelength,substance,waveunit  )
 %       'GreenlandDust' (Polashenski et al., 2015)
 %       'SanJuanDust' (Skiles et al. 2017)
 %   waveunit, no default to prevent errors, options are 'um','nm', 'mum',
-%       'mm', 'cm', 'm',
+%       'mm', 'cm', 'm'
+%       or frequencies 'MHz','GHz','THz'
+%       or wavenumbers 'invcm', 'cmm1'
 %
 % OUTPUT
 %   N - complex refractive index (imaginary part positive)
+%   substance - full name of substance
 % OPTIONAL OUTPUT
 %   wavelengths - wavelengths from original database, in units specified by
 %       waveunit, useful if input wavelengths = []
@@ -81,7 +84,7 @@ function [ N, varargout] = refractiveIndex(wavelength,substance,waveunit  )
 
 numarg = 3;
 narginchk(numarg,4)
-nargoutchk(0,2)
+nargoutchk(0,3)
 
 persistent W84 WB08 P16 HQ73 BC CBC BrC CBrC Sahara Greenland SanJuan alreadyWarn
 
@@ -90,7 +93,7 @@ tableUnit = 'm';
 % inputs
 p = inputParser;
 addRequired(p,'wavelength',@(x) isnumeric(x) && all(x(:)>0))
-addRequired(p,'substance',@(x) ischar(x) || isstring(x))
+addRequired(p,'substance',@(x) ischar(x) || isstring(x) || iscell(x))
 addRequired(p,'waveunit',@(x) ischar(x) || isstring(x))
 parse(p,wavelength,substance,waveunit);
 % iceTemp = p.Results.iceTemp; %#ok<NASGU>
@@ -259,7 +262,10 @@ if ~isequal(size(N),waveSize)
     N = reshape(N,waveSize);
 end
 
-if nargout>1
+% substance as a character vector
+substance = char(substance);
+
+if nargout>2
     wave = convertLengthUnits(exp(logWave),tableUnit,p.Results.waveunit);
     varargout{1} = reshape(wave,size(N));
 end
@@ -332,11 +338,11 @@ elseif strcmpi(substance,'icewb')
     material = iceWB;
 elseif strcmpi(substance,'soot') || strncmpi(substance,'black',5)
     material = BlackCarbon;
-elseif strncmpi(substance,'coats',5)
+elseif strncmpi(substance,'coats',5) || strncmpi(substance,'coatedblack',11)
     material = CoatedBlackCarbon;
-elseif strcmpi(substance,'brc')
+elseif strcmpi(substance,'brc') || strncmpi(substance,'brown',5)
     material = BrownCarbon;
-elseif strncmpi(substance,'coatb',5)
+elseif strncmpi(substance,'coatb',5) || strncmpi(substance,'coatedbrown',11)
     material = CoatedBrownCarbon;
 elseif strncmpi(substance,'sahar',5)
     material = SaharaDust;
@@ -344,6 +350,8 @@ elseif strncmpi(substance,'green',5)
     material = GreenlandDust;
 elseif strncmpi(substance,'sanju',5)
     material = SanJuanDust;
+elseif strcmpi(substance,'dust')
+        material = SanJuanDust;
 else
     error('substance %s not recognized',substance)
 end
