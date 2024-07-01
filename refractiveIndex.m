@@ -26,8 +26,8 @@ function [ N, substance, varargout] = refractiveIndex(wavelength,substance,waveu
 %
 % OUTPUT
 %   N - complex refractive index (imaginary part positive)
-%   substance - full name of substance
-% OPTIONAL OUTPUT
+%   substance - full name of substance as a string
+% OPTIONAL OUTPUT, in order
 %   wavelengths - wavelengths from original database, in units specified by
 %       waveunit, useful if input wavelengths = []
 
@@ -84,7 +84,7 @@ function [ N, substance, varargout] = refractiveIndex(wavelength,substance,waveu
 
 numarg = 3;
 narginchk(numarg,4)
-nargoutchk(0,3)
+nargoutchk(0,4)
 
 persistent W84 WB08 P16 HQ73 BC CBC BrC CBrC Sahara Greenland SanJuan alreadyWarn
 
@@ -262,8 +262,8 @@ if ~isequal(size(N),waveSize)
     N = reshape(N,waveSize);
 end
 
-% substance as a character vector
-substance = char(substance);
+% substance as a string
+substance = string(substance);
 
 if nargout>2
     wave = convertLengthUnits(exp(logWave),tableUnit,p.Results.waveunit);
@@ -351,7 +351,7 @@ elseif strncmpi(substance,'green',5)
 elseif strncmpi(substance,'sanju',5)
     material = SanJuanDust;
 elseif strcmpi(substance,'dust')
-        material = SanJuanDust;
+    material = SanJuanDust;
 else
     error('substance %s not recognized',substance)
 end
